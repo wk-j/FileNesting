@@ -1,0 +1,36 @@
+﻿<ExtensionModel>
+	<Runtime>
+		<Import assembly="FileNesting.dll" />
+		<Import file="LICENSE" />
+	</Runtime>
+
+	<Extension path="/MonoDevelop/Ide/Commands">
+		<Category _name="File" id="File">
+			<Command
+				id="MonoDevelop.FileNesting.Commands.Nest"
+				_description="Nest Item"
+				_label="Nest Item..." />
+			<Command
+				id="MonoDevelop.FileNesting.Commands.UnNest"
+				_description="Un-nest Item"
+				_label="Un-nest Item" />
+		</Category>
+	</Extension>
+
+	<Extension path="/MonoDevelop/Ide/ContextMenu/ProjectPad">
+		<Condition id="ItemType" value="ProjectFile">
+			<ItemSet
+				id="FileNesting"
+				_label="File Nesting"
+				insertafter="BuildActions"
+				insertbefore="QuickProperties">
+				<CommandItem id="MonoDevelop.FileNesting.Commands.Nest" />
+				<CommandItem id="MonoDevelop.FileNesting.Commands.UnNest" />
+			</ItemSet>
+		</Condition>
+	</Extension>
+
+	<Extension path="/MonoDevelop/Ide/Pads/ProjectPad">
+		<NodeBuilder id="FileNestingExtension" class="MonoDevelop.FileNesting.FileNestingNodeBuilderExtension" />
+	</Extension>
+</ExtensionModel>

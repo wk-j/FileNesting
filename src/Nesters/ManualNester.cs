@@ -1,50 +1,61 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using EnvDTE;
+using System.Linq;
+using MonoDevelop.FileNesting;
+using MonoDevelop.Ide;
+using MonoDevelop.Projects;
 
 namespace MadsKristensen.FileNesting
 {
     static class ManualNester
     {
         private const string CordovaKind = "{262852C6-CD72-467D-83FE-5EEB1973A190}";
-        public static void Nest(IEnumerable<ProjectItem> items)
+        public static void Nest(IEnumerable<ProjectFile> items, IEnumerable<ProjectFile> siblings)
         {
-            ItemSelector selector = new ItemSelector(items);
-
-            if (!selector.ShowDialog().Value)
+            ProjectItemSelector selector = null;
+            using (selector = new ProjectItemSelector(items, siblings))
             {
-                return;
+                if (!selector.ShowWithParent())
+                {
+                    return;
+                }
             }
 
-            foreach (ProjectItem item in items)
+            foreach (ProjectFile item in items)
             {
-                string path = item.FileNames[0];
-                ProjectItem parent = item.DTE.Solution.FindProjectItem(selector.SelectedFile);
+                string path = item.FilePath;
+                ProjectFile parent = item.Project.GetProjectFile(selector.SelectedFile);
                 if (parent == null) continue;
 
-                bool mayNeedAttributeSet = item.ContainingProject.Kind.Equals(CordovaKind, System.StringComparison.OrdinalIgnoreCase);
-                if (mayNeedAttributeSet)
-                {
-                    SetDependentUpon(item, parent.Name);
-                }
-                else
-                {
-                    item.Remove();
-                    parent.ProjectItems.AddFromFile(path);
-                }
+                item.DependsOn = parent.FilePath;
+            //    bool mayNeedAttributeSet = item.ContainingProject.Kind.Equals(CordovaKind, System.StringComparison.OrdinalIgnoreCase);
+            //    if (mayNeedAttributeSet)
+            //    {
+            //        SetDependentUpon(item, parent.Name);
+            //    }
+            //    else
+            //    {
+            //        item.Remove();
+            //        parent.ProjectItems.AddFromFile(path);
+            //    }
             }
+
+            IdeApp.ProjectOperations.SaveAsync(items.First().Project);
         }
 
-        public static void UnNest(ProjectItem item)
+        public static void UnNest(ProjectFile item)
         {
-            foreach (ProjectItem child in item.ProjectItems)
-            {
-                UnNest(child);
-            }
+            item.DependsOn = null;
+            IdeApp.ProjectOperations.SaveAsync(item.Project);
+            //foreach (ProjectItem child in item.ProjectItems)
+            //{
+            //    UnNest(child);
+            //}
 
-            UnNestItem(item);
+            //UnNestItem(item);
         }
 
+/*
         private static void UnNestItem(ProjectItem item)
         {
             string path = item.FileNames[0];
@@ -119,6 +130,6 @@ namespace MadsKristensen.FileNesting
             {
                 item.Properties.Item("DependentUpon").Value = value;
             }
-        }
+        }*/
     }
 }
