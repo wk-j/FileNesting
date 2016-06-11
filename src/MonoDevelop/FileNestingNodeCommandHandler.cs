@@ -1,9 +1,11 @@
 ﻿
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using MadsKristensen.FileNesting;
 using MonoDevelop.Components.Commands;
+using MonoDevelop.Core;
+using MonoDevelop.Ide;
+using MonoDevelop.Ide.Gui;
 using MonoDevelop.Ide.Gui.Components;
 using MonoDevelop.Ide.Gui.Pads.ProjectPad;
 using MonoDevelop.Projects;
@@ -12,15 +14,16 @@ namespace MonoDevelop.FileNesting
 {
     class FileNestingNodeCommandHandler : NodeCommandHandler
     {
-        static IEnumerable<ProjectFile> nested;
-
         [AllowMultiSelection]
         [CommandUpdateHandler(Commands.Nest)]
         void BeforeNest(CommandInfo info)
         {
-            info.Enabled = true;
-            //_items = Helpers.GetSelectedItems().Where(i => (i.Kind.Equals(VSConstants.ItemTypeGuid.PhysicalFile_string, StringComparison.OrdinalIgnoreCase) && i.ProjectItems != null));
-            //button.Enabled = _items.Any();
+            info.Enabled = OnlyProjectFilesSelected();
+        }
+
+        bool OnlyProjectFilesSelected()
+        {
+            return CurrentNodes.All(node => node.DataItem is ProjectFile);
         }
 
         [AllowMultiSelection]
@@ -77,7 +80,11 @@ namespace MonoDevelop.FileNesting
         [CommandUpdateHandler(Commands.UnNest)]
         void BeforeUnNest(CommandInfo info)
         {
-            nested = GetNestedFiles();
+            info.Enabled = OnlyProjectFilesSelected();
+            if (!info.Enabled)
+                return;
+
+            var nested = GetNestedFiles();
 
             info.Enabled = nested.Any();
         }
@@ -86,14 +93,14 @@ namespace MonoDevelop.FileNesting
         [CommandHandler(Commands.UnNest)]
         void UnNest()
         {
-            //FileNestingFactory.Enabled = false;
+            FileNestingFactory.Enabled = false;
 
-            foreach (ProjectFile item in nested)
+            foreach (ProjectFile item in GetNestedFiles())
             {
                 ManualNester.UnNest(item);
             }
 
-            //FileNestingFactory.Enabled = true;
+            FileNestingFactory.Enabled = true;
         }
 
         IEnumerable<ProjectFile> GetNestedFiles()
@@ -102,6 +109,59 @@ namespace MonoDevelop.FileNesting
                 .Select(node => node.DataItem)
                 .OfType<ProjectFile>()
                 .Where(file => file.DependsOnFile != null);
+        }
+
+        [AllowMultiSelection]
+        [CommandHandler(Commands.AutoNest)]
+        void AutoNest()
+        {
+            var selected = GetSelectedItemsRecursive().Distinct().ToArray();
+            var projects = selected.Select(item => item.Project).Distinct().ToArray();
+
+            using (ProgressMonitor monitor = CreateProgressMonitor())
+            {
+                foreach (ProjectFile item in selected)
+                {
+                    FileNestingFactory.RunNesting(item);
+                }
+
+                foreach (var project in projects)
+                {
+                    project.SaveAsync(new ProgressMonitor());
+                }
+            }
+        }
+
+        IEnumerable<ProjectFile> GetSelectedItemsRecursive()
+        {
+            foreach (var node in CurrentNodes)
+            {
+                var provider = ProjectFileProvider.Create(node.DataItem);
+                if (provider != null)
+                {
+                    foreach (ProjectFile child in provider.GetFiles())
+                    {
+                        if (child != null)
+                            yield return child;
+                    }
+                }
+                else
+                {
+                    var projectFile = node.DataItem as ProjectFile;
+                    if (projectFile != null)
+                        yield return projectFile;
+                }
+            }
+        }
+
+        ProgressMonitor CreateProgressMonitor()
+        {
+            return IdeApp.Workbench.ProgressMonitors.GetStatusProgressMonitor
+            (
+                GettextCatalog.GetString ("Nesting files..."),
+                Stock.StatusSolutionOperation,
+                false
+            );
         }
     }
 }

@@ -69,6 +69,10 @@
       <DependentUpon>ProjectItemSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="Nesters\ManualNester.cs" />
+    <Compile Include="Nesters\FileNestingFactory.cs" />
+    <Compile Include="Nesters\Automated\AddedExtensionNester.cs" />
+    <Compile Include="Nesters\IFileNester.cs" />
+    <Compile Include="MonoDevelop\ProjectFileProvider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="MonoDevelop.References.proj" />

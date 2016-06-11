@@ -1,9 +1,11 @@
 ﻿
+using MonoDevelop.Projects;
+
 namespace MadsKristensen.FileNesting
 {
     public interface IFileNester
     {
-        NestingResult Nest(string fileName);
+        NestingResult Nest(ProjectFile file);
         bool IsEnabled();
     }
 

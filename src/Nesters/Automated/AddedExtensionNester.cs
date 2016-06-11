@@ -1,28 +1,29 @@
 ﻿using System.IO;
-using EnvDTE;
+using MonoDevelop.Projects;
 
 namespace MadsKristensen.FileNesting
 {
     internal class AddedExtensionNester : IFileNester
     {
-        public NestingResult Nest(string fileName)
+        public NestingResult Nest(ProjectFile file)
         {
-            string trimmed = Path.GetFileNameWithoutExtension(fileName);
-            ProjectItem item = VSPackage.DTE.Solution.FindProjectItem(trimmed);
+            string trimmed = Path.GetFileNameWithoutExtension(file.FilePath);
+            string trimmedFullPath = file.FilePath.ParentDirectory.Combine(trimmed);
+            ProjectFile parent = file.Project.GetProjectFile(trimmedFullPath);
 
-            if (item != null)
+            if (parent != null)
             {
-                item.ProjectItems.AddFromFile(fileName);
+                file.DependsOn = parent.FilePath;
                 return NestingResult.StopProcessing;
             }
 
             return NestingResult.Continue;
         }
 
-
         public bool IsEnabled()
         {
-            return VSPackage.Options.EnableExtensionRule;
+            return true;
+            //return VSPackage.Options.EnableExtensionRule;
         }
     }
 }

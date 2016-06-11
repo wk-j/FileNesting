@@ -14,19 +14,28 @@
 				id="MonoDevelop.FileNesting.Commands.UnNest"
 				_description="Un-nest Item"
 				_label="Un-nest Item" />
+			<Command
+				id="MonoDevelop.FileNesting.Commands.AutoNest"
+				_description="Automatically nests selected items"
+				_label="Auto-nest selected items" />
 		</Category>
 	</Extension>
 
 	<Extension path="/MonoDevelop/Ide/ContextMenu/ProjectPad">
-		<Condition id="ItemType" value="ProjectFile">
+		<Condition id="ItemType" value="ProjectFile|Project|ProjectFolder">
 			<ItemSet
 				id="FileNesting"
 				_label="File Nesting"
-				insertafter="BuildActions"
-				insertbefore="QuickProperties">
+				insertafter="MonoDevelop.Ide.Commands.FileCommands.OpenContainingFolder"
+				insertbefore="ToolsSectionEnd">
 				<CommandItem id="MonoDevelop.FileNesting.Commands.Nest" />
 				<CommandItem id="MonoDevelop.FileNesting.Commands.UnNest" />
+				<SeparatorItem />
+				<CommandItem id="MonoDevelop.FileNesting.Commands.AutoNest" />
 			</ItemSet>
+			<SeparatorItem 
+				insertafter="MonoDevelop.Ide.Commands.FileCommands.OpenContainingFolder"
+				insertbefore="FileNesting"/>
 		</Condition>
 	</Extension>
 
