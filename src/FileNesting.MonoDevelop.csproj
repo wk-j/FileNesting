@@ -73,6 +73,8 @@
     <Compile Include="Nesters\Automated\AddedExtensionNester.cs" />
     <Compile Include="Nesters\IFileNester.cs" />
     <Compile Include="MonoDevelop\ProjectFileProvider.cs" />
+    <Compile Include="MonoDevelop\FileNestingOptions.cs" />
+    <Compile Include="MonoDevelop\FileNestingStartupHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="MonoDevelop.References.proj" />

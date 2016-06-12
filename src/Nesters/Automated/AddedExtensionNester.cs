@@ -22,8 +22,7 @@ namespace MadsKristensen.FileNesting
 
         public bool IsEnabled()
         {
-            return true;
-            //return VSPackage.Options.EnableExtensionRule;
+            return FileNestingOptions.EnableExtensionRule;
         }
     }
 }

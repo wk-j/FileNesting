@@ -5,7 +5,8 @@ namespace MonoDevelop.FileNesting
     {
         Nest,
         UnNest,
-        AutoNest
+        AutoNest,
+        EnableAutoNest
     }
 }
 

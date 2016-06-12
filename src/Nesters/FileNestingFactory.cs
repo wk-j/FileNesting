@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MonoDevelop.Core;
+using MonoDevelop.Ide;
 using MonoDevelop.Projects;
 
 namespace MadsKristensen.FileNesting
@@ -22,42 +24,42 @@ namespace MadsKristensen.FileNesting
         //private static ProjectItemsEvents _events;
         public static bool Enabled { get; set; } = true;
 
-        //public static void Enable(DTE2 dte)
-        //{
-        //    if (_events == null)
-        //    {
-        //        _events = ((Events2)dte.Events).ProjectItemsEvents;
-        //        _events.ItemAdded += ItemAdded;
-        //        _events.ItemRenamed += ItemRenamed;
-        //    }
-        //}
+        public static void Enable()
+        {
+            IdeApp.Workspace.FileAddedToProject += OnFileAddedToProject;
+            IdeApp.Workspace.FileRenamedInProject += OnFileRenamedInProject;
+        }
 
-        //private static void ItemRenamed(ProjectItem item, string OldName)
-        //{
-        //    ItemAdded(item);
-        //}
+        static void OnFileAddedToProject(object sender, ProjectFileEventArgs e)
+        {
+            foreach (ProjectFileEventInfo info in e)
+            {
+                ItemAdded(info.ProjectFile);
+            }
+        }
 
-        //private static void ItemAdded(ProjectItem item)
-        //{
-        //    // Node.js project system doesn't support 'item.Collection'
-        //    if (item.ContainingProject.Kind.Equals("{9092aa53-fb77-4645-b42d-1ccca6bd08bd}", StringComparison.OrdinalIgnoreCase))
-        //        return;
+        static void OnFileRenamedInProject(object sender, ProjectFileRenamedEventArgs e)
+        {
+            foreach (ProjectFileRenamedEventInfo info in e)
+            {
+                ItemAdded(info.ProjectFile);
+            }
+        }
 
-        //    if (VSPackage.Options != null && VSPackage.Options.EnableAutoNesting && item != null && item.Properties != null)
-        //    {
-        //        try
-        //        {
-        //            ProjectItem parent = item.Collection.Parent as ProjectItem;
-
-        //            if (parent == null || parent.Kind.Equals(VSConstants.ItemTypeGuid.PhysicalFile_string, StringComparison.OrdinalIgnoreCase))
-        //                RunNesting(item);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Logger.Log(ex);
-        //        }
-        //    }
-        //}
+        static void ItemAdded(ProjectFile item)
+        {
+            if (FileNestingOptions.EnableAutoNesting)
+            {
+                try
+                {
+                    RunNesting(item);
+                }
+                catch (Exception ex)
+                {
+                    LoggingService.LogError("Automatic nesting failed.", ex);
+               }
+           }
+        }
 
         public static void RunNesting(ProjectFile item)
         {

@@ -18,6 +18,11 @@
 				id="MonoDevelop.FileNesting.Commands.AutoNest"
 				_description="Automatically nests selected items"
 				_label="Auto-nest selected items" />
+			<Command
+				id="MonoDevelop.FileNesting.Commands.EnableAutoNest"
+				type="check"
+				_description="Enables automatic nesting when files are added or renamed"
+				_label="Enable automatic nesting" />
 		</Category>
 	</Extension>
 
@@ -32,6 +37,7 @@
 				<CommandItem id="MonoDevelop.FileNesting.Commands.UnNest" />
 				<SeparatorItem />
 				<CommandItem id="MonoDevelop.FileNesting.Commands.AutoNest" />
+				<CommandItem id="MonoDevelop.FileNesting.Commands.EnableAutoNest" />
 			</ItemSet>
 			<SeparatorItem 
 				insertafter="MonoDevelop.Ide.Commands.FileCommands.OpenContainingFolder"
@@ -41,5 +47,9 @@
 
 	<Extension path="/MonoDevelop/Ide/Pads/ProjectPad">
 		<NodeBuilder id="FileNestingExtension" class="MonoDevelop.FileNesting.FileNestingNodeBuilderExtension" />
+	</Extension>
+
+	<Extension path="/MonoDevelop/Ide/StartupHandlers">
+		<Class class="MonoDevelop.FileNesting.FileNestingStartupHandler" />
 	</Extension>
 </ExtensionModel>

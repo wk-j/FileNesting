@@ -163,6 +163,20 @@ namespace MonoDevelop.FileNesting
                 false
             );
         }
+
+        [AllowMultiSelection]
+        [CommandUpdateHandler(Commands.EnableAutoNest)]
+        void BeforeEnableAutoNest(CommandInfo info)
+        {
+            info.Checked = FileNestingOptions.EnableAutoNesting;
+        }
+
+        [AllowMultiSelection]
+        [CommandHandler(Commands.EnableAutoNest)]
+        void EnableAutoNest()
+        {
+            FileNestingOptions.EnableAutoNesting = !FileNestingOptions.EnableAutoNesting;
+        }
     }
 }
 
