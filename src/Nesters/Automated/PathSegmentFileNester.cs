@@ -1,30 +1,30 @@
 ﻿using System.IO;
 using System.Linq;
-using EnvDTE;
+using MonoDevelop.Projects;
 
 namespace MadsKristensen.FileNesting
 {
     internal class PathSegmentNester : IFileNester
     {
-        public NestingResult Nest(string fileName)
+        public NestingResult Nest(ProjectFile file)
         {
-            if (!IsSupported(fileName))
+            if (!IsSupported(file.FilePath))
                 return NestingResult.Continue;
 
-            string name = Path.GetFileNameWithoutExtension(fileName);
+            string name = Path.GetFileNameWithoutExtension(file.FilePath);
 
             int index = name.LastIndexOf('.');
             if (index > -1)
             {
-                string directory = Path.GetDirectoryName(fileName);
-                string extension = Path.GetExtension(fileName);
+                string directory = Path.GetDirectoryName(file.FilePath);
+                string extension = Path.GetExtension(file.FilePath);
                 string firstName = name.Substring(0, index);
                 string parentFileName = Path.Combine(directory, firstName + extension);
 
-                ProjectItem parent = VSPackage.DTE.Solution.FindProjectItem(parentFileName);
+                ProjectFile parent = file.Project.GetProjectFile(parentFileName);
                 if (parent != null)
                 {
-                    parent.ProjectItems.AddFromFile(fileName);
+                    file.DependsOn = parent.FilePath;
                     return NestingResult.StopProcessing;
                 }
             }
@@ -42,7 +42,7 @@ namespace MadsKristensen.FileNesting
 
         public bool IsEnabled()
         {
-            return VSPackage.Options.EnablePathSegmentRule;
+            return FileNestingOptions.EnablePathSegmentRule;
         }
     }
 }

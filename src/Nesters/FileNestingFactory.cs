@@ -15,7 +15,7 @@ namespace MadsKristensen.FileNesting
             //new VsDocNester(),
             //new BundleNester(),
             //new InterfaceImplementationNester(),
-            //new PathSegmentNester(),
+            new PathSegmentNester(),
             //new SpriteNester(),
             new AddedExtensionNester(),
 

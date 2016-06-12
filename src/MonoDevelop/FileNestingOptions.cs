@@ -17,7 +17,12 @@ namespace MadsKristensen.FileNesting
             set { PropertyService.Set("EnableExtensionRule", value); }
         }
 
-        //public bool EnablePathSegmentRule { get; set; }
+        public static bool EnablePathSegmentRule
+        {
+            get { return PropertyService.Get("EnablePathSegmentRule", true); }
+            set { PropertyService.Set("EnablePathSegmentRule", value); }
+        }
+
         //public bool EnableBundleRule { get; set; }
         //public bool EnableSpriteRule { get; set; }
         //public bool EnableKnownFileTypeRule { get; set; }
