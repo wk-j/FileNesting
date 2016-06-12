@@ -52,4 +52,10 @@
 	<Extension path="/MonoDevelop/Ide/StartupHandlers">
 		<Class class="MonoDevelop.FileNesting.FileNestingStartupHandler" />
 	</Extension>
+
+	<Extension path="/MonoDevelop/Ide/GlobalOptionsDialog">
+		<Section id="MonoDevelop.FileNesting" _label="File Nesting" insertafter="VersionControl">
+			<Section id="General" _label="General" fill="true" class="MonoDevelop.FileNesting.FileNestingOptionsPanel" />
+		</Section>
+	</Extension>
 </ExtensionModel>
