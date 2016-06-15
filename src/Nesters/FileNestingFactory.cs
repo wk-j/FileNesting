@@ -14,14 +14,13 @@ namespace MadsKristensen.FileNesting
             new KnownFileTypeNester(),
             //new VsDocNester(),
             //new BundleNester(),
-            //new InterfaceImplementationNester(),
+            new InterfaceImplementationNester(),
             new PathSegmentNester(),
             //new SpriteNester(),
             new AddedExtensionNester(),
 
         };
 
-        //private static ProjectItemsEvents _events;
         public static bool Enabled { get; set; } = true;
 
         public static void Enable()

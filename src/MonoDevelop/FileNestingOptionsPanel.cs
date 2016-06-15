@@ -11,6 +11,7 @@ namespace MonoDevelop.FileNesting
     {
         Gtk.CheckButton enableAutomaticFileNestingCheckBox;
         Gtk.CheckButton enableExtensionRuleCheckBox;
+        Gtk.CheckButton enableInterfaceImplementationRuleCheckBox;
         Gtk.CheckButton enableKnownFileTypeRuleCheckBox;
         Gtk.CheckButton enablePathSegmentRuleCheckBox;
 
@@ -45,6 +46,12 @@ namespace MonoDevelop.FileNesting
             enableExtensionRuleCheckBox.BorderWidth = 10;
             rulesVBox.PackStart(enableExtensionRuleCheckBox, false, false, 0);
 
+            enableInterfaceImplementationRuleCheckBox = new Gtk.CheckButton(GettextCatalog.GetString("Enable interface implementation rule"));
+            enableInterfaceImplementationRuleCheckBox.TooltipText = GettextCatalog.GetString("Nest C# interface implementations under their respective interfaces (by filename only)");
+            enableInterfaceImplementationRuleCheckBox.Active = FileNestingOptions.EnableInterfaceImplementationRule;
+            enableInterfaceImplementationRuleCheckBox.BorderWidth = 10;
+            rulesVBox.PackStart(enableInterfaceImplementationRuleCheckBox, false, false, 0);
+
             enableKnownFileTypeRuleCheckBox = new Gtk.CheckButton(GettextCatalog.GetString("Enable known file type rule"));
             enableKnownFileTypeRuleCheckBox.TooltipText = GettextCatalog.GetString("Some known file types will be nested. Example: foo.css will nest under foo.less");
             enableKnownFileTypeRuleCheckBox.Active = FileNestingOptions.EnableKnownFileTypeRule;
@@ -68,6 +75,7 @@ namespace MonoDevelop.FileNesting
             FileNestingOptions.EnableExtensionRule = enableExtensionRuleCheckBox.Active;
             FileNestingOptions.EnablePathSegmentRule = enablePathSegmentRuleCheckBox.Active;
             FileNestingOptions.EnableKnownFileTypeRule = enableKnownFileTypeRuleCheckBox.Active;
+            FileNestingOptions.EnableInterfaceImplementationRule = enableInterfaceImplementationRuleCheckBox.Active;
         }
 
         static string GetBoldMarkup (string text)

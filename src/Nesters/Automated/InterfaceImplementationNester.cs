@@ -1,28 +1,28 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using EnvDTE;
+using MonoDevelop.Projects;
 
 namespace MadsKristensen.FileNesting
 {
     internal class InterfaceImplementationNester : IFileNester
     {
-        public NestingResult Nest(string fileName)
+        public NestingResult Nest(ProjectFile file)
         {
-            if (!IsSupported(fileName))
+            if (!IsSupported(file.FilePath))
                 return NestingResult.Continue;
 
-            IEnumerable<string> possibleInterfaceNames = PossibleInterfaceNames(fileName);
+            IEnumerable<string> possibleInterfaceNames = PossibleInterfaceNames(file.FilePath);
 
             foreach (string interfaceName in possibleInterfaceNames)
             {
-                string directory = Path.GetDirectoryName(fileName);
+                string directory = Path.GetDirectoryName(file.FilePath);
                 string parentFileName = Path.Combine(directory, interfaceName);
 
-                ProjectItem parent = VSPackage.DTE.Solution.FindProjectItem(parentFileName);
+                ProjectFile parent = file.Project.GetProjectFile(parentFileName);
                 if (parent != null)
                 {
-                    parent.ProjectItems.AddFromFile(fileName);
+                    file.DependsOn = parent.FilePath;
                     return NestingResult.StopProcessing;
                 }
             }
@@ -77,7 +77,7 @@ namespace MadsKristensen.FileNesting
 
         public bool IsEnabled()
         {
-            return VSPackage.Options.EnableInterfaceImplementationRule;
+            return FileNestingOptions.EnableInterfaceImplementationRule;
         }
     }
 }

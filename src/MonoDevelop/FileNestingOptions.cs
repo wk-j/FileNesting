@@ -23,17 +23,17 @@ namespace MadsKristensen.FileNesting
             set { PropertyService.Set("EnablePathSegmentRule", value); }
         }
 
-        //public bool EnableBundleRule { get; set; }
-        //public bool EnableSpriteRule { get; set; }
-
         public static bool EnableKnownFileTypeRule
         {
             get { return PropertyService.Get("EnableKnownFileTypeRule", true); }
             set { PropertyService.Set("EnableKnownFileTypeRule", value); }
         }
 
-        //public bool EnableVsDocRule { get; set; }
-        //public bool EnableInterfaceImplementationRule { get; set; }
+        public static bool EnableInterfaceImplementationRule
+        {
+            get { return PropertyService.Get("EnableInterfaceImplementationRule", false); }
+            set { PropertyService.Set("EnableInterfaceImplementationRule", value); }
+        }
     }
 }
 
