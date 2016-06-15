@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using EnvDTE;
+using MonoDevelop.Projects;
 
 namespace MadsKristensen.FileNesting
 {
@@ -13,21 +13,21 @@ namespace MadsKristensen.FileNesting
             {".map", new [] {".js", ".css"}},
         };
 
-        public NestingResult Nest(string fileName)
+        public NestingResult Nest(ProjectFile file)
         {
-            string extension = Path.GetExtension(fileName).ToLowerInvariant();
+            string extension = Path.GetExtension(file.FilePath).ToLowerInvariant();
 
             if (!_mapping.ContainsKey(extension))
                 return NestingResult.Continue;
 
             foreach (string ext in _mapping[extension])
             {
-                string parent = Path.ChangeExtension(fileName, ext);
-                ProjectItem item = VSPackage.DTE.Solution.FindProjectItem(parent);
+                string parent = Path.ChangeExtension(file.FilePath, ext);
+                ProjectFile item = file.Project.GetProjectFile(parent);
 
                 if (item != null)
                 {
-                    item.ProjectItems.AddFromFile(fileName);
+                    file.DependsOn = item.FilePath;
                     return NestingResult.StopProcessing;
                 }
             }
@@ -37,7 +37,7 @@ namespace MadsKristensen.FileNesting
 
         public bool IsEnabled()
         {
-            return VSPackage.Options.EnableKnownFileTypeRule;
+            return FileNestingOptions.EnableKnownFileTypeRule;
         }
     }
 }

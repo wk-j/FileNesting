@@ -11,6 +11,7 @@ namespace MonoDevelop.FileNesting
     {
         Gtk.CheckButton enableAutomaticFileNestingCheckBox;
         Gtk.CheckButton enableExtensionRuleCheckBox;
+        Gtk.CheckButton enableKnownFileTypeRuleCheckBox;
         Gtk.CheckButton enablePathSegmentRuleCheckBox;
 
         public override Control CreatePanelWidget()
@@ -44,6 +45,12 @@ namespace MonoDevelop.FileNesting
             enableExtensionRuleCheckBox.BorderWidth = 10;
             rulesVBox.PackStart(enableExtensionRuleCheckBox, false, false, 0);
 
+            enableKnownFileTypeRuleCheckBox = new Gtk.CheckButton(GettextCatalog.GetString("Enable known file type rule"));
+            enableKnownFileTypeRuleCheckBox.TooltipText = GettextCatalog.GetString("Some known file types will be nested. Example: foo.css will nest under foo.less");
+            enableKnownFileTypeRuleCheckBox.Active = FileNestingOptions.EnableKnownFileTypeRule;
+            enableKnownFileTypeRuleCheckBox.BorderWidth = 10;
+            rulesVBox.PackStart(enableKnownFileTypeRuleCheckBox, false, false, 0);
+
             enablePathSegmentRuleCheckBox = new Gtk.CheckButton(GettextCatalog.GetString("Enable path segment rule"));
             enablePathSegmentRuleCheckBox.TooltipText = GettextCatalog.GetString("Files with an added path segment nests under parent. Example: foo.min.js nests under foo.js");
             enablePathSegmentRuleCheckBox.Active = FileNestingOptions.EnablePathSegmentRule;
@@ -60,6 +67,7 @@ namespace MonoDevelop.FileNesting
             FileNestingOptions.EnableAutoNesting = enableAutomaticFileNestingCheckBox.Active;
             FileNestingOptions.EnableExtensionRule = enableExtensionRuleCheckBox.Active;
             FileNestingOptions.EnablePathSegmentRule = enablePathSegmentRuleCheckBox.Active;
+            FileNestingOptions.EnableKnownFileTypeRule = enableKnownFileTypeRuleCheckBox.Active;
         }
 
         static string GetBoldMarkup (string text)

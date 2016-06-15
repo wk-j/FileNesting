@@ -11,7 +11,7 @@ namespace MadsKristensen.FileNesting
     {
         private static List<IFileNester> _nesters = new List<IFileNester>()
         {
-            //new KnownFileTypeNester(),
+            new KnownFileTypeNester(),
             //new VsDocNester(),
             //new BundleNester(),
             //new InterfaceImplementationNester(),
