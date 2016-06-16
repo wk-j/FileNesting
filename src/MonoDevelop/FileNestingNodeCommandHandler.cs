@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using MadsKristensen.FileNesting;
@@ -18,12 +19,29 @@ namespace MonoDevelop.FileNesting
         [CommandUpdateHandler(Commands.Nest)]
         void BeforeNest(CommandInfo info)
         {
-            info.Enabled = OnlyProjectFilesSelected();
+            info.Enabled = OnlyProjectFilesSelected() && ProjectFilesInSameDirectory();
         }
 
         bool OnlyProjectFilesSelected()
         {
             return CurrentNodes.All(node => node.DataItem is ProjectFile);
+        }
+
+        bool ProjectFilesInSameDirectory()
+        {
+            FilePath directory = CurrentNodes
+                .Select(node => node.DataItem)
+                .OfType<ProjectFile>()
+                .Select(projectFile => projectFile.FilePath.ParentDirectory)
+                .FirstOrDefault();
+
+            if (directory.IsNull)
+                return false;
+
+            return CurrentNodes
+                .Select(node => node.DataItem)
+                .OfType<ProjectFile>()
+                .All(projectFile => projectFile.FilePath.ParentDirectory == directory);
         }
 
         [AllowMultiSelection]
