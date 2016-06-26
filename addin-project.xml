@@ -1,7 +1,7 @@
 <AddinProject appVersion="6.0">
   <Project platforms="Linux Mac Win32">
     <AddinFile>bin/FileNesting.dll</AddinFile>
-    <BuildFile>FileNesting.MonoDevelop</BuildFile>
+    <BuildFile>FileNesting.MonoDevelop.sln</BuildFile>
     <BuildConfiguration>Debug</BuildConfiguration>
   </Project>
 </AddinProject>
