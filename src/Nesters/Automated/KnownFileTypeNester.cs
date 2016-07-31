@@ -10,6 +10,9 @@ namespace MadsKristensen.FileNesting
             {".js", new [] {".coffee", ".litcoffee", ".iced", ".ts", ".tsx", ".dart", ".html", ".cshtml", ".vbhtml", ".aspx", ".master", ".ascx"}},
             {".css", new [] {".less", ".scss", ".sass", ".styl", ".html", ".cshtml", ".vbhtml", ".aspx", ".master", ".ascx"}},
             {".ts", new [] {".html", ".cshtml", ".vbhtml", ".aspx", ".master", ".ascx"}},
+            {".ps1", new [] {".cake"}},
+            {".cmd", new [] {".cake"}},
+            {".sh", new [] {".cake"}},
             {".map", new [] {".js", ".css"}},
         };
 
