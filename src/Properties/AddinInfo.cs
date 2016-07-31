@@ -8,5 +8,5 @@
 [assembly:AddinName ("FileNesting")]
 [assembly:AddinDescription ("Adds File Nesting support.")]
 
-[assembly:AddinDependency ("Core", "6.0")]
-[assembly:AddinDependency ("Ide", "6.0")]
+[assembly: AddinDependency("::MonoDevelop.Core", MonoDevelop.BuildInfo.Version)]
+[assembly: AddinDependency("::MonoDevelop.Ide", MonoDevelop.BuildInfo.Version)]
