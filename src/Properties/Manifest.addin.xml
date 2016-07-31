@@ -26,6 +26,28 @@
 		</Category>
 	</Extension>
 
+
+	<!--
+	<Extension path="/MonoDevelop/Ide/ContextMenu/ProjectPad">
+		<Condition id="ItemType" value="SolutionFolder|SolutionFile">
+			<ItemSet
+				id="FileNesting"
+				_label="File Nesting"
+				insertafter="MonoDevelop.Ide.Commands.FileCommands.OpenContainingFolder"
+				insertbefore="ToolsSectionEnd">
+				<CommandItem id="MonoDevelop.FileNesting.Commands.Nest" />
+				<CommandItem id="MonoDevelop.FileNesting.Commands.UnNest" />
+				<SeparatorItem />
+				<CommandItem id="MonoDevelop.FileNesting.Commands.AutoNest" />
+				<CommandItem id="MonoDevelop.FileNesting.Commands.EnableAutoNest" />
+			</ItemSet>
+			<SeparatorItem 
+				insertafter="MonoDevelop.Ide.Commands.FileCommands.OpenContainingFolder"
+				insertbefore="FileNesting"/>
+		</Condition>
+	</Extension>
+	-->
+
 	<Extension path="/MonoDevelop/Ide/ContextMenu/ProjectPad">
 		<Condition id="ItemType" value="ProjectFile|Project|ProjectFolder">
 			<ItemSet
